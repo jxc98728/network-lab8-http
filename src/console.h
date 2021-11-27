@@ -17,7 +17,7 @@
 #define COLOR_CYAN ((COLOR_RESET & 0xFFF0) | 0x000B)
 #define COLOR_BOLD (COLOR_RESET | FOREGROUND_INTENSITY)
 #define set_color(COLOR) SetConsoleTextAttribute(handle, COLOR)
-#elif __linux__
+#else
 #include <pthread.h>
 #define COLOR_RED "\x1b[1;31m"
 #define COLOR_GREEN "\x1b[1;32m"
@@ -41,7 +41,7 @@ public:
         GetConsoleScreenBufferInfo(handle, &scr_buf);
         COLOR_RESET = scr_buf.wAttributes;
         print_mutex = CreateMutex(NULL, FALSE, NULL);
-#elif __linux__
+#else
         pthread_mutex_init(&print_mutex, NULL);
 #endif
     }
@@ -128,7 +128,7 @@ public:
     {
 #ifdef _WIN32
         WaitForSingleObject(print_mutex, INFINITE);
-#elif __linux__
+#else
         pthread_mutex_lock(&print_mutex);
 #endif
     }
@@ -137,7 +137,7 @@ public:
     {
 #ifdef _WIN32
         ReleaseMutex(print_mutex);
-#elif __linux__
+#else
         pthread_mutex_unlock(&print_mutex);
 #endif
     }
@@ -148,7 +148,7 @@ private:
     WORD COLOR_RESET;
     CONSOLE_SCREEN_BUFFER_INFO scr_buf;
     HANDLE print_mutex;
-#elif __linux__
+#else
     pthread_mutex_t print_mutex;
 #endif
 };

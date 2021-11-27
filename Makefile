@@ -16,10 +16,12 @@ else
 	EXE = server
 endif
 
+CXXFLAGS = -Wall -std=c++11
+
 all: $(EXE)
 
 $(EXE): src/main.cpp
-	$(CXX) src/main.cpp -o $(EXE) $(CXXLIBS)
+	$(CXX) $(CXXFLAGS) src/main.cpp -o $(EXE) $(CXXLIBS)
 
 .PHONY: clean
 clean:
